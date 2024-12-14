@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-// import { listMovies, ListMoviesData, OrderDirection } from "@movie/dataconnect";
-// import { getMovieById, GetMovieByIdData } from "@movie/dataconnect";
+import { listMovies, ListMoviesData, OrderDirection } from "@movie/dataconnect";
+import { getMovieById, GetMovieByIdData } from "@movie/dataconnect";
 // import { GetActorByIdData, getActorById } from "@movie/dataconnect";
 
 // import { upsertUser } from "@movie/dataconnect";
@@ -36,30 +36,66 @@ import { onAuthStateChanged, User } from "firebase/auth";
 // Fetch top-rated movies
 export const handleGetTopMovies = async (
   limit: number
-): Promise<any[]> => {
-  return [];
+): Promise<ListMoviesData["movies"] | null> => {
+  try {
+    const response = await listMovies({
+      orderByRating: OrderDirection.DESC,
+      limit,
+    });
+    return response.data.movies;
+  } catch (error) {
+    console.error("Error fetching top movies:", error);
+    return null;
+  }
 };
 
 // Fetch latest movies
 export const handleGetLatestMovies = async (
   limit: number
-): Promise<any[]> => {
-  return [];
+): Promise<ListMoviesData["movies"] | null> => {
+  try {
+    const response = await listMovies({
+      orderByReleaseYear: OrderDirection.DESC,
+      limit,
+    });
+    return response.data.movies;
+  } catch (error) {
+    console.error("Error fetching latest movies:", error);
+    return null;
+  }
 };
 
 // Fetch movie details by ID
 export const handleGetMovieById = async (
   movieId: string
 ): Promise<any | null> => {
-  return null;
+  try {
+    const response = await getMovieById({ id: movieId });
+    if (response.data.movie) {
+      return response.data.movie;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching movie:", error);
+    return null;
+  }
 };
 
 
 // Fetch actor details by ID
 export const handleGetActorById = async (
   actorId: string
-): Promise<any | null> => {
-  return null;
+): Promise<GetActorByIdData["actor"] | null> => {
+  try {
+    const response = await getActorById({ id: actorId });
+    if (response.data.actor) {
+      return response.data.actor;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching actor:", error);
+    return null;
+  }
 };
 
 // Updates user table when user signs in

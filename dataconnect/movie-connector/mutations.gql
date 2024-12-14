@@ -14,7 +14,15 @@
  #
 
 # Upsert (update or insert) a user based on their username
-# TODO: Complete UpsertUser
+# Create or update the current authenticated user
+mutation UpsertUser($username: String!) @auth(level: USER) {
+  user_upsert(
+    data: {
+      id_expr: "auth.uid"
+      username: $username
+    }
+  )
+}
 
 # Add a movie to the user's favorites list
 # TODO: Complete UpsertUser

@@ -13,9 +13,8 @@
  # limitations under the License.
 
 connectorId: movie-connector
-authMode: PUBLIC
 generate:
   javascriptSdk:
     package: "@movie/dataconnect"
-    outputDir: ../../app/src/lib/dataconnect-sdk
+    outputDir: ../../dataconnect-generated/js
     packageJsonDir: "../../app"
