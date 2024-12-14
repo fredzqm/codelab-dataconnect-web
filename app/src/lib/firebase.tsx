@@ -23,13 +23,18 @@ import {
 import { connectorConfig } from '@movie/dataconnect';
 import { createContext } from "react";
 
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "AIzaSyCx7ShZv2I-9JU04Ue6Su10DozfHXUqFBA",
+  authDomain: "fredzqm-staging.firebaseapp.com",
+  databaseURL: "https://fredzqm-staging.firebaseio.com",
+  projectId: "fredzqm-staging",
+  storageBucket: "fredzqm-staging.appspot.com",
+  messagingSenderId: "435410221340",
+  appId: "1:435410221340:web:f8966d312d2174303022d9"
 };
 
 const firebaseApp =
