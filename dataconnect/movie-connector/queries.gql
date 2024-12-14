@@ -134,10 +134,77 @@ query GetCurrentUser @auth(level: USER) {
 }
 
 # Check if a movie is favorited by user
-# TODO: Complete GetIfFavoritedMovie
+query GetIfFavoritedMovie($movieId: UUID!) @auth(level: USER) {
+  favorite_movie(key: { userId_expr: "auth.uid", movieId: $movieId }) {
+    movieId
+  }
+}
 
 # Search for movies, actors, and reviews
-# TODO: Complete SearchAll
+query SearchAll(
+  $input: String
+  $minYear: Int!
+  $maxYear: Int!
+  $minRating: Float!
+  $maxRating: Float!
+  $genre: String!
+) @auth(level: PUBLIC) {
+  moviesMatchingTitle: movies(
+    where: {
+      _and: [
+        { releaseYear: { ge: $minYear } }
+        { releaseYear: { le: $maxYear } }
+        { rating: { ge: $minRating } }
+        { rating: { le: $maxRating } }
+        { genre: { contains: $genre } }
+        { title: { contains: $input } }
+      ]
+    }
+  ) {
+    id
+    title
+    genre
+    rating
+    imageUrl
+  }
+  moviesMatchingDescription: movies(
+    where: {
+      _and: [
+        { releaseYear: { ge: $minYear } }
+        { releaseYear: { le: $maxYear } }
+        { rating: { ge: $minRating } }
+        { rating: { le: $maxRating } }
+        { genre: { contains: $genre } }
+        { description: { contains: $input } }
+      ]
+    }
+  ) {
+    id
+    title
+    genre
+    rating
+    imageUrl
+  }
+  actorsMatchingName: actors(where: { name: { contains: $input } }) {
+    id
+    name
+    imageUrl
+  }
+  reviewsMatchingText: reviews(where: { reviewText: { contains: $input } }) {
+    id
+    rating
+    reviewText
+    reviewDate
+    movie {
+      id
+      title
+    }
+    user {
+      id
+      username
+    }
+  }
+}
 
 # Search movie descriptions using L2 similarity with Vertex AI
 # TODO: Complete SearchMovieDescriptionUsingL2Similarity

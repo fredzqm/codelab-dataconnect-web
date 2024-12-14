@@ -16,15 +16,15 @@
 
 import { listMovies, ListMoviesData, OrderDirection } from "@movie/dataconnect";
 import { getMovieById, GetMovieByIdData } from "@movie/dataconnect";
-// import { GetActorByIdData, getActorById } from "@movie/dataconnect";
+import { GetActorByIdData, getActorById } from "@movie/dataconnect";
 
-// import { upsertUser } from "@movie/dataconnect";
-// import { getCurrentUser, GetCurrentUserData } from "@movie/dataconnect";
+import { upsertUser } from "@movie/dataconnect";
+import { getCurrentUser, GetCurrentUserData } from "@movie/dataconnect";
 
-// import { addFavoritedMovie, deleteFavoritedMovie, getIfFavoritedMovie } from "@movie/dataconnect";
-// import { addReview, deleteReview } from "@movie/dataconnect";
+import { addFavoritedMovie, deleteFavoritedMovie, getIfFavoritedMovie } from "@movie/dataconnect";
+import { addReview, deleteReview } from "@movie/dataconnect";
 
-// import { searchAll, SearchAllData } from "@movie/dataconnect";
+import { searchAll, SearchAllData } from "@movie/dataconnect";
 
 // import {
 //   searchMovieDescriptionUsingL2similarity,
@@ -98,36 +98,70 @@ export const handleGetActorById = async (
   }
 };
 
-// Updates user table when user signs in
-export const handleAuthStateChange = (auth: any, setUser: (user: User | null) => void) => {
-  return () => {};
+// Handle user authentication state changes and upsert user
+export const handleAuthStateChange = (
+  auth: any,
+  setUser: (user: User | null) => void
+) => {
+  return onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      setUser(user);
+      const username = user.email?.split("@")[0] || "anon";
+      await upsertUser({ username });
+    } else {
+      setUser(null);
+    }
+  });
 };
 
 // Fetch current user profile
-export const handleGetCurrentUser = async (): Promise<any | null> => {
-  return null;
+export const handleGetCurrentUser = async (): Promise<
+  GetCurrentUserData["user"] | null
+> => {
+  try {
+    const response = await getCurrentUser();
+    return response.data.user;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return null;
+  }
 };
-
 
 // Add a movie to user's favorites
 export const handleAddFavoritedMovie = async (
   movieId: string
 ): Promise<void> => {
-  return;
+  try {
+    await addFavoritedMovie({ movieId });
+  } catch (error) {
+    console.error("Error adding movie to favorites:", error);
+    throw error;
+  }
 };
 
 // Remove a movie from user's favorites
 export const handleDeleteFavoritedMovie = async (
   movieId: string
 ): Promise<void> => {
-  return;
+  try {
+    await deleteFavoritedMovie({ movieId });
+  } catch (error) {
+    console.error("Error removing movie from favorites:", error);
+    throw error;
+  }
 };
 
 // Check if the movie is favorited by the user
 export const handleGetIfFavoritedMovie = async (
   movieId: string
 ): Promise<boolean> => {
-  return false;
+  try {
+    const response = await getIfFavoritedMovie({ movieId });
+    return !!response.data.favorite_movie;
+  } catch (error) {
+    console.error("Error checking if movie is favorited:", error);
+    return false;
+  }
 };
 
 // Add a review to a movie
@@ -136,12 +170,22 @@ export const handleAddReview = async (
   rating: number,
   reviewText: string
 ): Promise<void> => {
-  return;
+  try {
+    await addReview({ movieId, rating, reviewText });
+  } catch (error) {
+    console.error("Error adding review:", error);
+    throw error;
+  }
 };
 
 // Delete a review from a movie
 export const handleDeleteReview = async (movieId: string): Promise<void> => {
-  return;
+  try {
+    await deleteReview({ movieId });
+  } catch (error) {
+    console.error("Error deleting review:", error);
+    throw error;
+  }
 };
 
 // Function to perform the search using the query and filters
@@ -152,8 +196,22 @@ export const handleSearchAll = async (
   minRating: number,
   maxRating: number,
   genre: string
-): Promise<any> => {
-  return null;
+): Promise<SearchAllData | null> => {
+  try {
+    const response = await searchAll({
+      input: searchQuery,
+      minYear,
+      maxYear,
+      minRating,
+      maxRating,
+      genre,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error performing search:", error);
+    return null;
+  }
 };
 
 
