@@ -23,6 +23,7 @@ type Movie
   rating: Float
   description: String
   tags: [String]
+  descriptionEmbedding: Vector @col(size:768) # Enables vector search
 }
 
 # Movie Metadata

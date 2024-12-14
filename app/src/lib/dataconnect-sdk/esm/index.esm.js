@@ -144,3 +144,15 @@ export function searchAllRef(dcOrVars, vars) {
 export function searchAll(dcOrVars, vars) {
   return executeQuery(searchAllRef(dcOrVars, vars));
 }
+export function searchMovieDescriptionUsingL2similarityRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  if('_useGeneratedSdk' in dcInstance) {
+    dcInstance._useGeneratedSdk();
+  } else {
+    console.error('Please update to the latest version of the Data Connect SDK by running `npm install firebase@dataconnect-preview`.');
+  }
+  return queryRef(dcInstance, 'SearchMovieDescriptionUsingL2Similarity', inputVars);
+}
+export function searchMovieDescriptionUsingL2similarity(dcOrVars, vars) {
+  return executeQuery(searchMovieDescriptionUsingL2similarityRef(dcOrVars, vars));
+}

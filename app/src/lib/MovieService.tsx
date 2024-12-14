@@ -26,10 +26,10 @@ import { addReview, deleteReview } from "@movie/dataconnect";
 
 import { searchAll, SearchAllData } from "@movie/dataconnect";
 
-// import {
-//   searchMovieDescriptionUsingL2similarity,
-//   SearchMovieDescriptionUsingL2similarityData,
-// } from "@movie/dataconnect";
+import {
+  searchMovieDescriptionUsingL2similarity,
+  SearchMovieDescriptionUsingL2similarityData,
+} from "@movie/dataconnect";
 
 import { onAuthStateChanged, User } from "firebase/auth";
 
@@ -218,12 +218,27 @@ export const handleSearchAll = async (
 // Perform vector-based search for movies based on description
 export const searchMoviesByDescription = async (
   query: string
-): Promise<any[]> => {
-  return [];
+): Promise<
+  | SearchMovieDescriptionUsingL2similarityData["movies_descriptionEmbedding_similarity"]
+  | null
+> => {
+  try {
+    const response = await searchMovieDescriptionUsingL2similarity({ query });
+    return response.data.movies_descriptionEmbedding_similarity;
+  } catch (error) {
+    console.error("Error fetching movie descriptions:", error);
+    return null;
+  }
 };
 
 export const fetchSimilarMovies = async (
   description: string
 ): Promise<any[]> => {
-  return [];
+  try {
+    const response = await searchMovieDescriptionUsingL2similarity({ query: description });
+    return response.data.movies_descriptionEmbedding_similarity;
+  } catch (error) {
+    console.error("Error fetching movie descriptions:", error);
+    return null;
+  }
 };

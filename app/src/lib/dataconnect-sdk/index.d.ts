@@ -258,6 +258,21 @@ export interface SearchAllVariables {
   genre: string;
 }
 
+export interface SearchMovieDescriptionUsingL2similarityData {
+  movies_descriptionEmbedding_similarity: ({
+    id: UUIDString;
+    title: string;
+    description?: string | null;
+    tags?: string[] | null;
+    rating?: number | null;
+    imageUrl: string;
+  } & Movie_Key)[];
+}
+
+export interface SearchMovieDescriptionUsingL2similarityVariables {
+  query: string;
+}
+
 export interface UpsertUserData {
   user_upsert: User_Key;
 }
@@ -369,5 +384,14 @@ export function searchAllRef(dc: DataConnect, vars: SearchAllVariables): QueryRe
 
 export function searchAll(vars: SearchAllVariables): QueryPromise<SearchAllData, SearchAllVariables>;
 export function searchAll(dc: DataConnect, vars: SearchAllVariables): QueryPromise<SearchAllData,SearchAllVariables>;
+
+
+/* Allow users to create refs without passing in DataConnect */
+export function searchMovieDescriptionUsingL2similarityRef(vars: SearchMovieDescriptionUsingL2similarityVariables): QueryRef<SearchMovieDescriptionUsingL2similarityData, SearchMovieDescriptionUsingL2similarityVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function searchMovieDescriptionUsingL2similarityRef(dc: DataConnect, vars: SearchMovieDescriptionUsingL2similarityVariables): QueryRef<SearchMovieDescriptionUsingL2similarityData,SearchMovieDescriptionUsingL2similarityVariables>;
+
+export function searchMovieDescriptionUsingL2similarity(vars: SearchMovieDescriptionUsingL2similarityVariables): QueryPromise<SearchMovieDescriptionUsingL2similarityData, SearchMovieDescriptionUsingL2similarityVariables>;
+export function searchMovieDescriptionUsingL2similarity(dc: DataConnect, vars: SearchMovieDescriptionUsingL2similarityVariables): QueryPromise<SearchMovieDescriptionUsingL2similarityData,SearchMovieDescriptionUsingL2similarityVariables>;
 
 
